@@ -1,0 +1,31 @@
+CREATE DATABASE IF NOT EXISTS game_topup
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE game_topup;
+
+CREATE TABLE orders (
+
+id INT AUTO_INCREMENT PRIMARY KEY,
+
+tracking_number VARCHAR(40) NOT NULL UNIQUE,
+
+phone VARCHAR(20) NOT NULL,
+
+game VARCHAR(100) NOT NULL,
+
+package VARCHAR(100) NOT NULL,
+
+amount INT NOT NULL,
+
+player_id VARCHAR(100) NOT NULL,
+
+payment_method VARCHAR(50) NOT NULL,
+
+transfer_image VARCHAR(255) DEFAULT NULL,
+
+status VARCHAR(50) DEFAULT 'قيد المراجعة',
+
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);

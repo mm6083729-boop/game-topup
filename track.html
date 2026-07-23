@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تتبع الطلب</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
+}
+
+body{
+
+background:#0d1117;
+
+background-image:url("images/bg.jpg");
+
+background-size:cover;
+
+background-position:center;
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+padding:20px;
+
+}
+
+.container{
+
+width:100%;
+max-width:550px;
+
+background:rgba(18,22,35,.95);
+
+padding:25px;
+
+border-radius:18px;
+
+box-shadow:0 0 25px rgba(0,0,0,.45);
+
+color:#fff;
+
+}
+
+h2{
+
+text-align:center;
+
+margin-bottom:25px;
+
+color:#35ff84;
+
+}
+
+label{
+
+display:block;
+
+margin-bottom:8px;
+
+font-size:15px;
+
+}
+
+input{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+font-size:16px;
+
+margin-bottom:18px;
+
+outline:none;
+
+}
+
+button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+background:#35ff84;
+
+color:#000;
+
+font-size:17px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+button:hover{
+
+transform:scale(1.03);
+
+}
+
+#result{
+
+display:none;
+
+margin-top:25px;
+
+background:#111827;
+
+padding:18px;
+
+border-radius:12px;
+
+line-height:2;
+
+}
+
+.status{
+
+font-weight:bold;
+
+font-size:18px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>تتبع الطلب</h2>
+
+<label>
+
+رقم التتبع
+
+</label>
+
+<input
+type="text"
+id="tracking"
+placeholder="مثال: GS20260723123456">
+
+<button onclick="trackOrder()">
+
+بحث
+
+</button>
+
+<div id="result">
+    <p>🎮 اللعبة: <span id="game"></span></p>
+
+<p>📦 الباقة: <span id="package"></span></p>
+
+<p>💰 السعر: <span id="amount"></span> ريال</p>
+
+<p>🆔 Player ID: <span id="player_id"></span></p>
+
+<p>💳 طريقة الدفع: <span id="payment_method"></span></p>
+
+<p>📅 تاريخ الطلب: <span id="created_at"></span></p>
+
+<p>
+
+🚦 الحالة:
+
+<span class="status" id="status"></span>
+
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+function trackOrder() {
+
+    let tracking = document.getElementById("tracking").value.trim();
+
+    if (tracking === "") {
+        alert("أدخل رقم التتبع");
+        return;
+    }
+
+    fetch("http://localhost/admin/track.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "tracking=" + encodeURIComponent(tracking)
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if (!data.success) {
+            alert(data.message);
+            return;
+        }
+
+        document.getElementById("result").style.display = "block";
+
+        document.getElementById("game").textContent = data.game;
+        document.getElementById("package").textContent = data.package_name;
+        document.getElementById("amount").textContent = data.amount;
+        document.getElementById("player_id").textContent = data.player_id;
+        document.getElementById("payment_method").textContent = data.payment_method;
+        document.getElementById("created_at").textContent = data.created_at;
+
+        const status = document.getElementById("status");
+        status.textContent = data.status;
+
+        switch (data.status) {
+            case "قيد المراجعة":
+                status.style.color = "#ffc107";
+                break;
+
+            case "جاري التنفيذ":
+                status.style.color = "#00bfff";
+                break;
+
+            case "تم الشحن":
+                status.style.color = "#35ff84";
+                break;
+
+            case "ملغي":
+                status.style.color = "#ff4444";
+                break;
+
+            default:
+                status.style.color = "#ffffff";
+        }
+
+    })
+    .catch(error => {
+        console.error(error);
+        alert(error.message);
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>

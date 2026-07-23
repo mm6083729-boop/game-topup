@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>لوحة الإدارة</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+<h1>لوحة الإدارة</h1>
+</header>
+
+<table class="admin-table">
+
+<tr>
+<th>اللعبة</th>
+<th>Player ID</th>
+<th>الهاتف</th>
+<th>الحالة</th>
+<th>الإجراء</th>
+</tr>
+
+<tr>
+<td>PUBG</td>
+<td>5123456789</td>
+<td>0912345678</td>
+<td class="status-pending">قيد المراجعة</td>
+<td>
+<button onclick="approve(this)">✔</button>
+<button onclick="reject(this)">✖</button>
+</td>
+</tr>
+
+<tr>
+<td>Free Fire</td>
+<td>123456789</td>
+<td>0999999999</td>
+<td class="status-pending">قيد المراجعة</td>
+<td>
+<button onclick="approve(this)">✔</button>
+<button onclick="reject(this)">✖</button>
+</td>
+</tr>
+
+<tr>
+<td>FC Mobile</td>
+<td>87654321</td>
+<td>0922222222</td>
+<td class="status-pending">قيد المراجعة</td>
+<td>
+<button onclick="approve(this)">✔</button>
+<button onclick="reject(this)">✖</button>
+</td>
+</tr>
+
+</table>
+
+<script>
+function approve(btn){
+const row=btn.parentElement.parentElement;
+const status=row.children[3];
+status.innerHTML="تم الشحن";
+status.className="status-done";
+}
+
+function reject(btn){
+const row=btn.parentElement.parentElement;
+const status=row.children[3];
+status.innerHTML="مرفوض";
+status.className="status-reject";
+}
+</script>
+
+</body>
+</html>

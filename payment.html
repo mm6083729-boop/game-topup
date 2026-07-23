@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>إتمام الدفع</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
+}
+
+body{
+background:#0d1117;
+background-image:url("images/bg.jpg");
+background-size:cover;
+background-position:center;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:520px;
+background:rgba(20,20,30,.95);
+border-radius:18px;
+padding:25px;
+box-shadow:0 0 25px rgba(0,0,0,.45);
+color:#fff;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+color:#35ff84;
+}
+
+.info{
+background:#111827;
+padding:15px;
+border-radius:12px;
+margin-bottom:20px;
+line-height:2;
+}
+
+.info span{
+color:#35ff84;
+font-weight:bold;
+}
+
+label{
+display:block;
+margin-top:15px;
+margin-bottom:8px;
+font-size:15px;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:15px;
+outline:none;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:20px;
+border:none;
+border-radius:10px;
+background:#35ff84;
+color:#000;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.03);
+}
+
+#tracking{
+display:none;
+margin-top:20px;
+background:#0f172a;
+padding:15px;
+border-radius:12px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>إتمام الطلب</h2>
+
+<div class="info">
+
+<p>🎮 اللعبة : <span id="game"></span></p>
+
+<p>📦 الباقة : <span id="package"></span></p>
+
+<p>💰 السعر : <span id="amount"></span> ريال</p>
+
+</div>
+
+<label>رقم الجوال</label>
+
+<input
+type="text"
+id="phone"
+placeholder="05xxxxxxxx">
+
+<label>Player ID</label>
+
+<input
+type="text"
+id="player_id"
+placeholder="أدخل معرف اللاعب">
+
+<label>طريقة الدفع</label>
+
+<select id="payment_method">
+
+<option value="">اختر طريقة الدفع</option>
+
+<option value="Apple Pay">Apple Pay</option>
+
+<option value="STC Pay">STC Pay</option>
+
+<option value="مدى">مدى</option>
+
+<option value="تحويل بنكك">تحويل بنكك</option>
+
+</select>
+
+<div id="paymentInfo" style="display:none;margin-top:20px;padding:15px;background:#0f172a;border-radius:12px;">
+
+<h3 style="color:#35ff84;margin-bottom:15px;">
+بيانات الدفع
+</h3>
+
+<p id="paymentText"></p>
+
+<label style="margin-top:20px;">
+إرفاق صورة الإيصال
+</label>
+
+<input
+type="file"
+id="transfer_image"
+accept="image/*">
+
+</div>
+
+<button onclick="sendOrder()">
+إرسال الطلب
+</button>
+
+<div id="tracking">
+
+<h3>تم إرسال الطلب بنجاح ✅</h3>
+
+<p>رقم التتبع</p>
+
+<h2 id="trackingNumber"></h2>
+
+<button onclick="copyTracking()">
+نسخ رقم التتبع
+</button>
+
+</div>
+<script>
+
+document.getElementById("game").innerHTML = localStorage.getItem("game");
+document.getElementById("package").innerHTML = localStorage.getItem("package");
+document.getElementById("amount").innerHTML = localStorage.getItem("amount");
+
+const payment = document.getElementById("payment_method");
+const paymentInfo = document.getElementById("paymentInfo");
+const paymentText = document.getElementById("paymentText");
+
+payment.addEventListener("change", () => {
+
+    if (payment.value === "") {
+        paymentInfo.style.display = "none";
+        return;
+    }
+
+    paymentInfo.style.display = "block";
+
+    switch (payment.value) {
+
+        case "Apple Pay":
+            paymentText.innerHTML =
+            "🍎 <b>Apple Pay</b><br>قم بالدفع عبر Apple Pay ثم ارفع صورة الإيصال.";
+            break;
+
+        case "STC Pay":
+            paymentText.innerHTML =
+            "📱 <b>STC Pay</b><br>رقم التحويل: <b>0501223800</b><br>ثم ارفع صورة الإيصال.";
+            break;
+
+        case "مدى":
+            paymentText.innerHTML =
+            "💳 <b>مدى</b><br>ادفع باستخدام بطاقة مدى ثم ارفع صورة الإيصال.";
+            break;
+
+        case "تحويل بنكك":
+            paymentText.innerHTML =
+            "🏦 <b>بنك الراجحي</b><br>اسم المستفيد: <b>محمود محمد عبدالقادر المبارك جار النبي</b><br>رقم الحساب: <b>ضع رقم الحساب هنا</b><br>ثم ارفع صورة الإيصال.";
+            break;
+
+    }
+
+});
+
+function sendOrder(){
+
+    let phone = document.getElementById("phone").value.trim();
+    let player_id = document.getElementById("player_id").value.trim();
+    let payment_method = payment.value;
+
+    let game = localStorage.getItem("game");
+    let packageName = localStorage.getItem("package");
+    let amount = localStorage.getItem("amount");
+
+    if(phone=="" || player_id=="" || payment_method==""){
+        alert("يرجى تعبئة جميع البيانات");
+        return;
+    }
+
+    let image = document.getElementById("transfer_image").files[0];
+
+    if(!image){
+        alert("يرجى إرفاق صورة الإيصال");
+        return;
+    }
+
+    let form = new FormData();
+
+    form.append("phone", phone);
+    form.append("game", game);
+    form.append("package", packageName);
+    form.append("amount", amount);
+    form.append("player_id", player_id);
+    form.append("payment_method", payment_method);
+    form.append("transfer_image", image);
+
+
+fetch("http://localhost/admin/backend.php"),{
+        method:"POST",
+        body:form
+    }
+
+    .then(res=>res.json())
+    .then(data=>{
+
+        if(data.success){
+
+            document.getElementById("tracking").style.display="block";
+            document.getElementById("trackingNumber").innerHTML=data.tracking_number;
+
+        }else{
+
+            alert(data.message);
+
+        }
+
+    })
+    .catch(()=>{
+
+        alert("حدث خطأ أثناء إرسال الطلب");
+
+    });
+
+}
+
+function copyTracking(){
+
+    navigator.clipboard.writeText(
+        document.getElementById("trackingNumber").innerText
+    );
+
+    alert("تم نسخ رقم التتبع");
+
+}
+
+</script>
+
+</div>
+
+</body>
+
+</html>

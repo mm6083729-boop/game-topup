@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Store</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Tahoma,sans-serif;
+}
+
+body{
+
+background:
+linear-gradient(rgba(10,20,45,.80),rgba(5,10,30,.90)),
+url("images/bg.png");
+
+background-size:cover;
+background-position:center;
+background-attachment:fixed;
+
+color:#fff;
+min-height:100vh;
+
+}
+
+.container{
+width:95%;
+max-width:1300px;
+margin:auto;
+padding:25px 0;
+}
+
+.logo{
+
+font-size:38px;
+font-weight:bold;
+text-align:center;
+margin-bottom:10px;
+color:#39ff88;
+
+}
+
+.sub{
+
+text-align:center;
+color:#b8c7ff;
+margin-bottom:35px;
+
+}
+
+.top-buttons{
+
+display:flex;
+
+justify-content:center;
+
+margin-bottom:30px;
+
+}
+
+.track-btn{
+
+display:inline-block;
+
+padding:14px 30px;
+
+background:#00c97a;
+
+color:#fff;
+
+text-decoration:none;
+
+font-size:18px;
+
+font-weight:bold;
+
+border-radius:14px;
+
+transition:.3s;
+
+box-shadow:0 0 20px rgba(0,201,122,.35);
+
+}
+
+.track-btn:hover{
+
+background:#00b36d;
+
+transform:translateY(-3px);
+
+box-shadow:0 0 25px rgba(0,255,157,.55);
+
+}
+
+.games{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+
+}
+
+.game{
+
+background:rgba(20,25,45,.78);
+
+backdrop-filter:blur(15px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:22px;
+
+overflow:hidden;
+
+transition:.35s;
+
+cursor:pointer;
+
+}
+
+.game:hover{
+
+transform:translateY(-8px);
+
+box-shadow:0 0 25px #00ff9d55;
+
+border-color:#00ff9d;
+
+}
+
+.game img{
+
+width:100%;
+height:210px;
+object-fit:cover;
+
+}
+
+.game h2{
+
+padding:18px;
+text-align:center;
+font-size:26px;
+
+}
+
+.game .price{
+
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+
+direction:ltr;
+
+padding:18px;
+
+background:#10192f;
+
+font-size:20px;
+
+font-weight:bold;
+
+}
+
+.game .price span:first-child{
+
+color:#ffd44d;
+
+}
+
+.game .price span:last-child{
+
+color:#35ff84;
+
+}
+
+#packages{
+
+display:none;
+
+margin-top:35px;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:20px;
+
+}
+
+.package{
+
+background:rgba(18,25,50,.85);
+
+border-radius:18px;
+
+padding:20px;
+
+text-align:center;
+
+cursor:pointer;
+
+transition:.3s;
+
+border:2px solid transparent;
+
+}
+
+.package:hover{
+
+transform:translateY(-6px);
+
+border-color:#00ff88;
+
+}
+
+.package.selected{
+
+border-color:#00ff88;
+
+box-shadow:0 0 18px #00ff8855;
+
+}
+
+.package img{
+
+width:90px;
+height:90px;
+object-fit:contain;
+margin-bottom:15px;
+
+}
+
+.package h3{
+
+margin-bottom:10px;
+
+}
+
+.package p{
+
+font-size:20px;
+
+color:#ffd44d;
+
+}
+
+.buy{
+
+display:none;
+
+width:100%;
+
+padding:18px;
+
+margin-top:25px;
+
+font-size:20px;
+
+font-weight:bold;
+
+border:none;
+
+border-radius:15px;
+
+background:#00c97a;
+
+color:#fff;
+
+cursor:pointer;
+
+}
+
+.buy:hover{
+
+background:#00b36d;
+
+}
+
+.back{
+
+display:none;
+
+margin-bottom:20px;
+
+padding:14px 25px;
+
+border:none;
+
+border-radius:12px;
+
+background:#2d3d67;
+
+color:#fff;
+
+cursor:pointer;
+
+}
+
+@media(max-width:768px){
+
+.logo{
+
+font-size:30px;
+
+}
+
+.games{
+
+grid-template-columns:1fr;
+
+}
+
+#packages{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:12px;
+
+}
+
+.package img{
+
+width:70px;
+height:70px;
+
+}
+
+.package h3{
+
+font-size:17px;
+
+}
+
+.package p{
+
+font-size:16px;
+
+}
+
+.buy{
+
+position:fixed;
+
+left:15px;
+right:15px;
+bottom:15px;
+
+z-index:100;
+
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">GAME STORE</div>
+
+<div class="logo">GAME STORE</div>
+
+<div class="sub">
+اشحن ألعابك بأفضل الأسعار
+</div>
+
+<div class="top-buttons">
+
+<a href="track.html" class="track-btn">
+📦 تتبع الطلب
+</a>
+
+</div>
+
+<button class="back" onclick="showGames()">⬅ رجوع</button>
+
+<div class="games" id="games">
+    
+
+    <!-- PUBG -->
+    <div class="game" onclick="showPackages('pubg')">
+        <img src="images/pubg.jpg">
+        <h2>PUBG MOBILE</h2>
+
+        <div class="price">
+            <span>يبدأ من</span>
+            <span>10 ريال</span>
+        </div>
+    </div>
+
+    <!-- FREE FIRE -->
+    <div class="game" onclick="showPackages('ff')">
+        <img src="images/freefire.jpg">
+        <h2>FREE FIRE</h2>
+
+        <div class="price">
+            <span>يبدأ من</span>
+            <span>8 ريال</span>
+        </div>
+    </div>
+
+    <!-- FC MOBILE -->
+    <div class="game" onclick="showPackages('fc')">
+        <img src="images/fc.jpg">
+        <h2>FC MOBILE</h2>
+
+        <div class="price">
+            <span>يبدأ من</span>
+            <span>12 ريال</span>
+        </div>
+    </div>
+
+</div>
+
+<div id="packages">
+
+    <!-- PUBG -->
+
+    <div class="package pubg" onclick="selectPackage('60 UC','10')">
+
+        <img src="images/uc.png">
+
+        <h3>60 UC</h3>
+
+        <p>10 ريال</p>
+
+    </div>
+
+    <div class="package pubg" onclick="selectPackage('325 UC','45')">
+
+        <img src="images/uc.png">
+
+        <h3>325 UC</h3>
+
+        <p>45 ريال</p>
+
+    </div>
+
+    <div class="package pubg" onclick="selectPackage('660 UC','85')">
+
+        <img src="images/uc.png">
+
+        <h3>660 UC</h3>
+
+        <p>85 ريال</p>
+
+    </div>
+
+    <div class="package pubg" onclick="selectPackage('1800 UC','210')">
+
+        <img src="images/uc.png">
+
+        <h3>1800 UC</h3>
+
+        <p>210 ريال</p>
+
+    </div>
+
+
+
+    <!-- FREE FIRE -->
+
+    <div class="package ff" onclick="selectPackage('100 Diamonds','8')">
+
+        <img src="images/diamond.png">
+
+        <h3>100 Diamonds</h3>
+
+        <p>8 ريال</p>
+
+    </div>
+
+    <div class="package ff" onclick="selectPackage('310 Diamonds','23')">
+
+        <img src="images/diamond.png">
+
+        <h3>310 Diamonds</h3>
+
+        <p>23 ريال</p>
+
+    </div>
+
+    <div class="package ff" onclick="selectPackage('520 Diamonds','38')">
+
+        <img src="images/diamond.png">
+
+        <h3>520 Diamonds</h3>
+
+        <p>38 ريال</p>
+
+    </div>
+
+    <div class="package ff" onclick="selectPackage('1060 Diamonds','72')">
+
+        <img src="images/diamond.png">
+
+        <h3>1060 Diamonds</h3>
+
+        <p>72 ريال</p>
+
+    </div>
+
+
+
+    <!-- FC -->
+
+    <div class="package fc" onclick="selectPackage('40 FC Points','12')">
+
+        <img src="images/fcpoints.png">
+
+        <h3>40 FC Points</h3>
+
+        <p>12 ريال</p>
+
+    </div>
+
+    <div class="package fc" onclick="selectPackage('100 FC Points','28')">
+
+        <img src="images/fcpoints.png">
+
+        <h3>100 FC Points</h3>
+
+        <p>28 ريال</p>
+
+    </div>
+
+    <div class="package fc" onclick="selectPackage('520 FC Points','95')">
+
+        <img src="images/fcpoints.png">
+
+        <h3>520 FC Points</h3>
+
+        <p>95 ريال</p>
+
+    </div>
+
+    <div class="package fc" onclick="selectPackage('1070 FC Points','180')">
+
+        <img src="images/fcpoints.png">
+
+        <h3>1070 FC Points</h3>
+
+        <p>180 ريال</p>
+
+    </div>
+
+</div>
+
+<button class="buy" onclick="buyNow()">
+🛒 شراء الآن
+</button>
+
+
+<script>
+
+let currentGame="";
+let selectedPackage="";
+let selectedPrice="";
+
+function showPackages(game){
+
+currentGame=game;
+
+document.getElementById("games").style.display="none";
+document.getElementById("packages").style.display="grid";
+document.querySelector(".back").style.display="inline-block";
+
+document.querySelectorAll(".package").forEach(card=>{
+
+card.style.display="none";
+card.classList.remove("selected");
+
+});
+
+document.querySelectorAll("."+game).forEach(card=>{
+
+card.style.display="block";
+
+});
+
+document.querySelector(".buy").style.display="none";
+
+}
+
+function showGames(){
+
+document.getElementById("games").style.display="grid";
+document.getElementById("packages").style.display="none";
+
+document.querySelector(".back").style.display="none";
+document.querySelector(".buy").style.display="none";
+
+}
+
+function selectPackage(name,price){
+
+selectedPackage=name;
+selectedPrice=price;
+
+document.querySelectorAll(".package").forEach(card=>{
+
+card.classList.remove("selected");
+
+});
+
+event.currentTarget.classList.add("selected");
+
+document.querySelector(".buy").style.display="block";
+
+}
+
+function buyNow(){
+
+let gameName="";
+
+if(currentGame=="pubg") gameName="PUBG MOBILE";
+if(currentGame=="ff") gameName="FREE FIRE";
+if(currentGame=="fc") gameName="FC MOBILE";
+
+localStorage.setItem("game",gameName);
+localStorage.setItem("package",selectedPackage);
+localStorage.setItem("amount",selectedPrice);
+
+window.location.href="payment.html";
+
+}
+
+</script>
+
+</div>
+
+</body>
+</html>
