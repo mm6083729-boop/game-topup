@@ -266,41 +266,31 @@ function sendOrder(){
     form.append("transfer_image", image);
 
 
-fetch("http://localhost/admin/backend.php"),{
-        method:"POST",
-        body:form
+fetch("https://game-topup.gamer.free/admin/backend.php", {
+    method: "POST",
+    body: form
+})
+.then(res => res.json())
+.then(data => {
+
+    if (data.success) {
+
+        document.getElementById("tracking").style.display = "block";
+        document.getElementById("trackingNumber").innerHTML = data.tracking_number;
+
+    } else {
+
+        alert(data.message);
+
     }
 
-    .then(res=>res.json())
-    .then(data=>{
+})
+.catch(error => {
 
-        if(data.success){
+    console.error(error);
+    alert("حدث خطأ أثناء إرسال الطلب");
 
-            document.getElementById("tracking").style.display="block";
-            document.getElementById("trackingNumber").innerHTML=data.tracking_number;
-
-        }else{
-
-            alert(data.message);
-
-        }
-
-    })
-    .catch(()=>{
-
-        alert("حدث خطأ أثناء إرسال الطلب");
-
-    });
-
-}
-
-function copyTracking(){
-
-    navigator.clipboard.writeText(
-        document.getElementById("trackingNumber").innerText
-    );
-
-    alert("تم نسخ رقم التتبع");
+});
 
 }
 
